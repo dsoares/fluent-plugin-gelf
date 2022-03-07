@@ -6,6 +6,7 @@ class GELFOutput < BufferedOutput
 
   config_param :use_record_host, :bool, :default => false
   config_param :add_msec_time, :bool, :default => false
+  config_param :add_nsec_field, :bool, :default => false
   config_param :host, :string, :default => nil
   config_param :port, :integer, :default => 12201
   config_param :protocol, :string, :default => 'udp'
@@ -52,6 +53,12 @@ class GELFOutput < BufferedOutput
     end
 
     gelfentry = { :timestamp => timestamp, :_tag => tag }
+
+    if @add_nsec_field then
+      tf = Fluent::TimeFormatter.new('%Y-%m-%d %H:%M:%S.%N %z', false, nil)
+      gelfentry[:ts_nsec] = tf.format(time)
+      gelfentry[:nsec] = time.nsec
+    end
 
     record.each_pair do |k,v|
       case k
