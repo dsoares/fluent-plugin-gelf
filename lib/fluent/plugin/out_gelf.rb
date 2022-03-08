@@ -56,7 +56,7 @@ class GELFOutput < BufferedOutput
 
     if @add_nsec_field then
       tf = Fluent::TimeFormatter.new('%Y-%m-%d %H:%M:%S.%N %z', false, nil)
-      gelfentry[:ts_nsec] = tf.format(time)
+      gelfentry[:timestamp_nsec] = tf.format(time)
       gelfentry[:nsec] = time.nsec
     end
 
